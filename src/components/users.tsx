@@ -16,6 +16,7 @@ export default function Users() {
 	const [loading, setLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const [busyId, setBusyId] = useState<string | null>(null);
+	const [searchCode, setSearchCode] = useState('');
 
 	const fetchUsers = async () => {
 		try {
@@ -41,16 +42,21 @@ export default function Users() {
 			setError(null);
 			const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/${id}/generate`);
 			const code = res.data?.certificateCode;
-			const verifyUrl = res.data?.verifyUrl;
 			await fetchUsers();
 			if (code) {
 				alert(`Certificate generated: ${code}`);
-				if (verifyUrl) window.open(`/verify/${code}`);
 			}
 		} catch (e: any) {
 			setError(e?.response?.data?.message ?? e.message ?? 'Failed to generate code');
 		} finally {
 			setBusyId(null);
+		}
+	};
+
+	const handleSearch = (e: React.FormEvent) => {
+		e.preventDefault();
+		if (searchCode.trim()) {
+			window.location.href = `/verify/${searchCode.trim()}`;
 		}
 	};
 
@@ -66,6 +72,26 @@ export default function Users() {
 					{loading ? 'Refreshing…' : 'Refresh'}
 				</button>
 			</div>
+
+			{/* Certificate Search Bar */}
+			<form onSubmit={handleSearch} className="mb-6">
+				<div className="flex gap-2">
+					<input
+						type="text"
+						value={searchCode}
+						onChange={(e) => setSearchCode(e.target.value)}
+						placeholder="Search certificate code (e.g., LC-86528U)"
+						className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+					/>
+					<button
+						type="submit"
+						disabled={!searchCode.trim()}
+						className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						Verify Certificate
+					</button>
+				</div>
+			</form>
 
 			{error && (
 				<div className="mb-3 text-sm text-red-600">{error}</div>
