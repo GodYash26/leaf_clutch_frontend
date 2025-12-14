@@ -45,7 +45,7 @@ export default function Users() {
 			await fetchUsers();
 			if (code) {
 				alert(`Certificate generated: ${code}`);
-				if (verifyUrl) window.open(`/verify/${code}`, '_blank');
+				if (verifyUrl) window.open(`/verify/${code}`);
 			}
 		} catch (e: any) {
 			setError(e?.response?.data?.message ?? e.message ?? 'Failed to generate code');
