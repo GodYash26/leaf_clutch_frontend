@@ -61,11 +61,11 @@ export default function Users() {
 	};
 
 	return (
-		<div className="p-4">
-			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-xl font-semibold">Users</h2>
+		<div className="users-container">
+			<div className="users-header">
+				<h2 className="users-title">Users</h2>
 				<button
-					className="px-3 py-1 border rounded"
+					className="btn-refresh"
 					onClick={fetchUsers}
 					disabled={loading}
 				>
@@ -74,19 +74,19 @@ export default function Users() {
 			</div>
 
 			{/* Certificate Search Bar */}
-			<form onSubmit={handleSearch} className="mb-6">
-				<div className="flex gap-2">
+			<form onSubmit={handleSearch} className="search-form">
+				<div className="search-form-group">
 					<input
 						type="text"
 						value={searchCode}
 						onChange={(e) => setSearchCode(e.target.value)}
 						placeholder="Search certificate code (e.g., LC-86528U)"
-						className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="search-input"
 					/>
 					<button
 						type="submit"
 						disabled={!searchCode.trim()}
-						className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+						className="btn-verify"
 					>
 						Verify Certificate
 					</button>
@@ -94,55 +94,55 @@ export default function Users() {
 			</form>
 
 			{error && (
-				<div className="mb-3 text-sm text-red-600">{error}</div>
+				<div className="alert alert-error">{error}</div>
 			)}
 
-			<div className="overflow-x-auto">
-				<table className="min-w-full border border-gray-200 text-sm">
+			<div className="table-wrapper">
+				<table className="users-table">
 					<thead>
-						<tr className="bg-gray-50">
-							<th className="p-2 border">Name</th>
-							<th className="p-2 border">Email</th>
-							<th className="p-2 border">Phone</th>
-							<th className="p-2 border">Role</th>
-							<th className="p-2 border">Certificate Code</th>
-							<th className="p-2 border">Actions</th>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+							<th>Role</th>
+							<th>Certificate Code</th>
+							<th>Actions</th>
 						</tr>
 					</thead>
 					<tbody>
 						{users.map((u) => (
 							<tr key={u._id}>
-								<td className="p-2 border">{u.fullName}</td>
-								<td className="p-2 border">{u.email}</td>
-								<td className="p-2 border">{u.phoneNumber}</td>
-								<td className="p-2 border">{u.role}</td>
-								<td className="p-2 border">
+								<td>{u.fullName}</td>
+								<td>{u.email}</td>
+								<td>{u.phoneNumber}</td>
+								<td>{u.role}</td>
+								<td className="cert-code-cell">
 									{u.certificateCode ? (
-									<a 
-										href={`/verify/${u.certificateCode}`} 
-										target="_blank" 
-										rel="noreferrer"
-										className="font-mono text-blue-600 hover:underline"
-									>
-										{u.certificateCode}
-									</a>
+										<a 
+											href={`/verify/${u.certificateCode}`} 
+											target="_blank" 
+											rel="noreferrer"
+											className="cert-code-link"
+										>
+											{u.certificateCode}
+										</a>
 									) : (
-										<span className="text-gray-400">—</span>
+										<span className="cert-code-empty">—</span>
 									)}
 								</td>
-								<td className="p-2 border">
+								<td className="action-cell">
 									{u.certificateCode ? (
-									<a
-										href={`/verify/${u.certificateCode}`}
-										target="_blank"
-										rel="noreferrer"
-										className="inline-block px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
-									>
-										Verify Certificate
-									</a>
-								) : (
-									<button
-										className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-50 hover:bg-blue-700"
+										<a
+											href={`/verify/${u.certificateCode}`}
+											target="_blank"
+											rel="noreferrer"
+											className="btn-action btn-verify-link"
+										>
+											Verify Certificate
+										</a>
+									) : (
+										<button
+											className="btn-action btn-generate"
 											onClick={() => generateCode(u._id)}
 											disabled={busyId === u._id}
 											title="Generate certificate"

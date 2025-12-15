@@ -52,23 +52,23 @@ export default function Verify() {
   }, [urlCode]);
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-6">Certificate Verification</h1>
+    <div className="verify-container">
+      <h1 className="verify-title">Certificate Verification</h1>
       
       {/* Search Form */}
-      <form onSubmit={handleSearch} className="mb-6">
-        <div className="flex gap-2">
+      <form onSubmit={handleSearch} className="search-form">
+        <div className="search-form-group">
           <input
             type="text"
             value={searchCode}
             onChange={(e) => setSearchCode(e.target.value)}
             placeholder="Enter certificate code (e.g., LC-86528U)"
-            className="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="search-input"
           />
           <button
             type="submit"
             disabled={loading || !searchCode.trim()}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-verify"
           >
             {loading ? 'Verifying...' : 'Verify'}
           </button>
@@ -76,52 +76,52 @@ export default function Verify() {
       </form>
 
       {/* Loading State */}
-      {loading && <div className="text-center py-4">Loading…</div>}
+      {loading && <div className="loading-state">Loading…</div>}
       
       {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+        <div className="alert alert-error">
           {error}
         </div>
       )}
       
       {/* Results */}
       {!loading && !error && data && (
-        <div className={`border-2 rounded-lg p-6 ${data.valid ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
-          <div className="flex items-center gap-2 mb-4">
+        <div className={`verify-result ${data.valid ? 'verify-result-valid' : 'verify-result-invalid'}`}>
+          <div className="verify-result-header">
             {data.valid ? (
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="verify-icon verify-icon-valid" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             ) : (
-              <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="verify-icon verify-icon-invalid" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             )}
-            <h2 className={`text-xl font-semibold ${data.valid ? 'text-green-800' : 'text-red-800'}`}>
+            <h2 className={`verify-result-title ${data.valid ? 'verify-result-title-valid' : 'verify-result-title-invalid'}`}>
               {data.valid ? '✓ Valid Certificate' : '✗ Invalid Certificate'}
             </h2>
           </div>
           
-          <p className={`mb-4 ${data.valid ? 'text-green-700' : 'text-red-700'}`}>
+          <p className={`verify-message ${data.valid ? 'verify-message-valid' : 'verify-message-invalid'}`}>
             {data.message}
           </p>
           
           {data.intern && (
-            <div className="bg-white rounded p-4 space-y-3">
-              <h3 className="font-semibold text-gray-800 mb-3">Internship Details:</h3>
-              <div className="grid gap-2">
-                <div className="flex">
-                  <span className="font-semibold text-gray-600 w-32">Name:</span>
-                  <span className="text-gray-900">{data.intern.fullName}</span>
+            <div className="verify-details">
+              <h3 className="verify-details-title">Internship Details:</h3>
+              <div className="verify-details-grid">
+                <div className="verify-details-row">
+                  <span className="verify-details-label">Name:</span>
+                  <span className="verify-details-value">{data.intern.fullName}</span>
                 </div>
-                <div className="flex">
-                  <span className="font-semibold text-gray-600 w-32">Email:</span>
-                  <span className="text-gray-900">{data.intern.email}</span>
+                <div className="verify-details-row">
+                  <span className="verify-details-label">Email:</span>
+                  <span className="verify-details-value">{data.intern.email}</span>
                 </div>
-                <div className="flex">
-                  <span className="font-semibold text-gray-600 w-32">Certificate Code:</span>
-                  <span className="font-mono text-blue-600 font-medium">{data.intern.certificateCode}</span>
+                <div className="verify-details-row">
+                  <span className="verify-details-label">Certificate Code:</span>
+                  <span className="verify-details-value verify-details-code">{data.intern.certificateCode}</span>
                 </div>
               </div>
             </div>
@@ -129,8 +129,8 @@ export default function Verify() {
         </div>
       )}
       
-      <div className="mt-6">
-        <a href="/" className="text-blue-600 hover:underline">← Back to Users</a>
+      <div className="verify-footer">
+        <a href="/" className="verify-back-link">← Back to Users</a>
       </div>
     </div>
   );
